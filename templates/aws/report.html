@@ -1,0 +1,163 @@
+{% extends 'aws/base.html' %}
+
+{% block content %}
+
+<script>
+    document.title = "Report"
+
+
+</script>
+
+<div class = 'report-inner'>
+    <div class = 'report-container'>
+    </div>
+</div>
+
+<script>
+
+var module_array = [
+    'introduction', 
+    'compute_in_the_cloud', 
+    'global_infrastructure_and_reliability', 
+    'networking',
+    'storage_and_databases',
+    'security',
+    'monitoring_and_analytics',
+    'pricing_and_support', 
+    'migration_and_innovation', 
+    'the_cloud_journey'
+]
+
+var total = 0
+var correct = 0
+
+const mainDiv = document.getElementsByClassName('report-container')[0];
+
+const mainTitle = document.createElement('h2');
+mainTitle.innerHTML = 'Performance breakdown';
+mainDiv.appendChild(mainTitle);
+
+const introduction = document.createElement('h4');
+introduction.innerHTML = 'Revisit modules or specific topics where you dropped marks';
+mainDiv.appendChild(introduction)
+
+var totalDiv = document.createElement('div');
+mainDiv.appendChild(totalDiv)
+
+for (var module in module_array) {
+    //deleteCookie(module_array[module]);
+    try{
+        var cookieData = getCookie(module_array[module]).split("$");// This doesn't work if the cookie doesn't exist
+        var moduleName = module_array[module];
+        var moduleTotal = cookieData[0];
+        if (moduleTotal != '0'){
+            var moduleCorrect = cookieData[1];
+            var incorrectQuestions = cookieData[2];
+            console.log(moduleName, moduleTotal, moduleCorrect, incorrectQuestions);
+
+            total += parseInt(moduleTotal)
+            correct += parseInt(moduleCorrect)
+
+            var moduleContainer = document.createElement('div');
+
+            var titleScoreContainer = document.createElement('div');
+            titleScoreContainer.style.display = 'grid';
+            titleScoreContainer.style.gridTemplateColumns = '80% 20%';
+            
+            var titleRevisionContainer = document.createElement('div');
+
+            var moduleLink = document.createElement('a');
+            moduleLink.innerText = "Practice " + moduleName.replace(/_/g, ' ') + ' module';
+            moduleLink.href = '/aws/cp/cp'+ (parseInt(module)+1).toString() + '/';
+            moduleLink.title = 'click to practice this module!'
+            moduleLink.target = '_blank';
+            moduleLink.classList = 'module-link';
+            moduleLink.target="_blank";
+        
+            var incorrectQuestionList = document.createElement('ul');
+            var incorrectQuestionArray = incorrectQuestions.split('!').slice(0,-1);
+            for (const question in incorrectQuestionArray){
+                var item = document.createElement('li');
+                var link = document.createElement('a');
+                link.text = incorrectQuestionArray[question].replace(/_/g, ' ');
+                link.href = '/aws/cp/cp'+ (parseInt(module)+1).toString() + '/' + incorrectQuestionArray[question] + '/'; 
+                link.title = 'click to practice this area!';
+                link.target="_blank";
+                link.classList='specific-link';
+                item.appendChild(link);
+                incorrectQuestionList.appendChild(item);
+            }
+
+            var summary = document.createElement('summary');
+            summary.innerHTML = 'Suggested ' + moduleName.replace(/_/g, ' ') + ' revision topics';
+            summary.title = 'Click to see where you dropped marks!'
+            
+
+            var explanation = document.createElement('p');
+            //explanation.innerHTML = 'You dropped marks in these areas:'
+
+            var details = document.createElement('details');
+            details.appendChild(summary);
+            details.appendChild(explanation);
+            details.appendChild(incorrectQuestionList);
+
+            var score = document.createElement('p');
+            score.innerHTML = +(parseInt(moduleCorrect)/parseInt(moduleTotal)*100).toFixed(2).toString() + '%';
+            score.title = moduleCorrect + '/' + moduleTotal;
+
+            titleRevisionContainer.appendChild(moduleLink);
+            titleRevisionContainer.appendChild(details);
+
+            titleScoreContainer.appendChild(titleRevisionContainer)
+            titleScoreContainer.appendChild(score);
+
+            moduleContainer.appendChild(titleScoreContainer);
+            moduleContainer.style.borderTop = '3px groove gray';
+
+            mainDiv.appendChild(moduleContainer);
+        }
+    } catch {}
+    // 
+    // for each module:
+    // calculate percentage of exam
+    // calculate percentage correct
+    // list incorrect questions 
+}
+
+
+
+var titleScoreContainer = document.createElement('div');
+titleScoreContainer.style.display = 'grid';
+titleScoreContainer.style.gridTemplateColumns = '80% 20%';
+totalDiv.appendChild(titleScoreContainer)
+
+var title = document.createElement('p');
+title.innerText = 'Total correct:';
+titleScoreContainer.appendChild(title);
+
+var score = document.createElement('p');
+score.innerText = +(parseInt(correct)/parseInt(total)*100).toFixed(2).toString() + '%';
+score.title = correct + '/' + total;
+console.log(correct, total)
+titleScoreContainer.appendChild(score);
+
+//mainDiv.appendChild(totalDiv);
+
+function getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for(var i = 0; i <ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "nope";
+}
+</script>
+
+{% endblock %}
