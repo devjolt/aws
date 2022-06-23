@@ -1,6 +1,8 @@
 import inspect
 import os
+from pathlib import Path
 import pkgutil
+import platform
 from random import randint, shuffle, choice
 import re
 import time
@@ -12,6 +14,13 @@ from .cloud_practitioner_modules import cp1, cp2, cp3, cp4, cp5, cp6, cp7, cp8, 
 from .utilities import utilities as utl
 import question_logic as ql
 from question_logic.all import *
+
+if platform.system() == 'Windows':
+    SEARCH_PATTERN = "modules\\\\(.*?).py"
+    RESOURCE_INPUT_QUESTIONS_PATH = '\\resource_input_questions'
+else:
+    SEARCH_PATTERN = "modules/(.*?).py"
+    RESOURCE_INPUT_QUESTIONS_PATH = '/resource_input_questions'
 
 module_str_to_name_dict = {
     'cp1':'introduction', 
@@ -95,7 +104,10 @@ class RandomModuleView(TemplateView):
         context = super().get_context_data(**kwargs)
         # 'modules' is a tuple containing module names passed into the view in urls.py. And we're picking one of them. 
         module = choice(self.modules)
-        module_str = re.search("modules\\\\(.*?).py", str(module))[1][1:]
+        
+        #changes search pattern depending on whether we're on Windows or Linux
+        module_str = re.search(SEARCH_PATTERN, str(module))[1][1:]
+
         print('module_str:',module_str)
         # Each module contains a dictionary called questions and we're picking one of the questions in that dictionary. 
         key = choice(tuple(module.questions.keys()))#from module, get key
@@ -120,7 +132,7 @@ class RandomModuleView(TemplateView):
             
             #makeing a list of all files in question logic module
             pkgpath = os.path.dirname(ql.__file__)
-            question_logic_files = [name for _, name, _ in pkgutil.iter_modules([pkgpath+'\\resource_input_questions'])]
+            question_logic_files = [name for _, name, _ in pkgutil.iter_modules([pkgpath + RESOURCE_INPUT_QUESTIONS_PATH])]
             
             question_logic_dict = {}
 
@@ -202,7 +214,7 @@ def SpecificAreaView(request, module, key):
         
         #makeing a list of all files in question logic module
         pkgpath = os.path.dirname(ql.__file__)
-        question_logic_files = [name for _, name, _ in pkgutil.iter_modules([pkgpath+'\\resource_input_questions'])]
+        question_logic_files = [name for _, name, _ in pkgutil.iter_modules([pkgpath + RESOURCE_INPUT_QUESTIONS_PATH])]
         
         question_logic_dict = {}
 
@@ -262,7 +274,7 @@ def test_question(request):
 
     resource = module.questions[key]
     pkgpath = os.path.dirname(ql.__file__)
-    question_logic_files = [name for _, name, _ in pkgutil.iter_modules([pkgpath+'\\resource_input_questions'])]
+    question_logic_files = [name for _, name, _ in pkgutil.iter_modules([pkgpath + RESOURCE_INPUT_QUESTIONS_PATH])]
     print('question_logic_files', question_logic_files)
     question_type = 'multi-choice'
     if type(resource['type'])==str:
