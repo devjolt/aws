@@ -35,6 +35,19 @@ module_str_to_name_dict = {
     'cp10':'the_cloud_journey' 
 }
 
+module_name_to_module_code_dict = {
+    'introduction':'cp1', 
+    'compute_in_the_cloud':'cp2', 
+    'global_infrastructure_and_reliability':'cp3', 
+    'networking':'cp4',
+    'storage_and_databases':'cp5',
+    'security':'cp6',
+    'monitoring_and_analytics':'cp7',
+    'pricing_and_support':'cp8', 
+    'migration_and_innovation':'cp9', 
+    'the_cloud_journey':'cp10' 
+}
+
 module_object_to_name_dict = {
     cp1:'introduction', 
     cp2:'compute_in_the_cloud', 
@@ -107,7 +120,8 @@ class RandomModuleView(TemplateView):
         
         #changes search pattern depending on whether we're on Windows or Linux
         module_str = re.search(SEARCH_PATTERN, str(module))[1][1:]
-
+        print('module_str',module_str)
+        
         print('module_str:',module_str)
         # Each module contains a dictionary called questions and we're picking one of the questions in that dictionary. 
         key = choice(tuple(module.questions.keys()))#from module, get key
@@ -170,6 +184,9 @@ class RandomModuleView(TemplateView):
         # Question key, acting as a question description
         context['question_description'] = key
         # question module name
+        cert_str =  re.sub('[0-9]+', '', module_str)
+        print(cert_str)
+        context['cert_name'] = cert_str
         context['module_name'] = module_object_to_name_dict[module]
         # context['module_name'][f'{module_name_dict[module_str]}']
         context['title'] = 'AWS Cloud Practitioner Practice'
@@ -184,8 +201,9 @@ class RandomModuleView(TemplateView):
         print('time taken:', stop-start)#interesting to know...
         return context
 
-def SpecificAreaView(request, module, key):
-    module = module_str_to_object_dict[module]
+def SpecificAreaView(request, module_str, key):
+    print(request.COOKIES['drill']  )
+    module = module_str_to_object_dict[module_str]
 
     #should possible use a different template, without reset button or module cookies. A drill template?
     template_name = 'aws/multichoice_module_cookies.html'
@@ -253,6 +271,9 @@ def SpecificAreaView(request, module, key):
     context['question_type'] = question_type
     # Question key, acting as a question description
     context['question_description'] = key
+    
+    context['cert_name'] = re.sub('[0-9]+', '', module_str)
+        
     # question module name
     context['module_name'] = module_object_to_name_dict[module]
     context['title'] = 'AWS ' + re.sub('_', ' ', module_object_to_name_dict[module]).capitalize()  
@@ -268,7 +289,10 @@ def SpecificAreaView(request, module, key):
 
 
 def test_question(request):
-    module = cp10
+    print(request.COOKIES['drill']  )
+    module_str = 'cp10'
+    module = module_str_to_object_dict[module_str]
+
     key = 'AWS_Well-Architectured_Framework_concepts'
     question_logic = 'new_pairs'
 
@@ -300,6 +324,7 @@ def test_question(request):
     print('items', items)
 
     context = {}
+    context['cert_name'] = re.sub('[0-9]+', '',module_str)
 
     context['question'], context['items'] = template_question, items
     # Question type may tell the template how to handle the question if needed.

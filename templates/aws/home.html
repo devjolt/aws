@@ -2,5 +2,110 @@
 
 {% block content %}
 
+<script>
+    if (getCookie("drill") != ''){//if drill exists
+                //console.log('something in cookie')
+                var drillCookieData = getCookie('drill').split(",");//use that as value from which to count up
+                var drillActive = drillCookieData[0];
+                var drillCount = drillCookieData[1];
+                var drillModuleDescription = drillCookieData[2];
+                var drillQuestion = drillCookieData[3];
+                //console.log('this is in cookie',drillCookieData)
+            } else {
+                //console.log('nothing in cookie')
+                var drillActive = '0';//start from zero
+                var drillCount = '0';
+                var drillModuleDescription = 'a';
+                var drillQuestion = 'a';
+                document.cookie = "drill=0,0,a,a;path=/;";
+            }
+    if (drillActive=='0'){
+        drillDeactivate()
+    } else if (drillActive=='1'){
+        drillActivate()
+    }
+
+    function drillActivate(){
+        const drillButton = document.getElementsByClassName('drill-button')[0];
+        drillButton.style.color='greenyellow';
+        drillButton.style.textShadow="\
+                                    0 0 7px #fff,\
+                                    0 0 21px #fff,\
+                                    0 0 42px #0fa,\
+                                    0 0 82px #0fa,\
+                                    0 0 92px #0fa,\
+                                    0 0 102px #0fa,\
+                                    0 0 151px #0fa";
+        // update cookie value
+        document.cookie = "drill=1,0,a,a;path=/;";
+        // update button appearance
+        
+        var drillActive='1';
+        //console.log('drillActivate',drillActive,getCookie('drill'));
+    }
+
+    function drillDeactivate(){
+        // update button appearance
+        const drillButton = document.getElementsByClassName('drill-button')[0];
+        drillButton.style.color='orange';
+        drillButton.style.textShadow='-1px -1px 1px #fff, 1px 1px 1px #000';
+        // update cookie value
+        document.cookie = "drill=0,0,a,a;path=/;";
+        var drillActive='0';
+        //console.log('drillDeactivate',drillActive, getCookie('drill'))
+        
+    }
+</script>
+
+<div class = 'home-inner'>
+    <div class="home-description">
+        <div class="home-description-title">Free Practice</div>
+        <div class="home-description-text">
+            <p>
+                Want to nail that test? Practice makes perfect...<br><br>
+                Features include:</p>
+            <div class='home-description-list'>
+                <span class="home-description-list-icon"><i class="bi bi-stopwatch"></i></span><div class = 'home-description-list-item'>Session timing</div>
+                <span class="home-description-list-icon"><i class="bi bi-shuffle"></i></span><div class = 'home-description-list-item'>Randomly generated questions</div>
+                <span class="home-description-list-icon"><i class="bi bi-hourglass-split"></i></span><div class = 'home-description-list-item'>Unlimited session lengths</div>
+                <span class="home-description-list-icon"><i class="bi bi-calculator-fill"></i></span><div class = 'home-description-list-item'>Dynamic score calculation</div>
+                <span class="home-description-list-icon"><i class="bi bi-clipboard2-data-fill"></i></span><div class = 'home-description-list-item'>Session performance breakdown</div>
+                <span class="home-description-list-icon"><i class="bi bi-infinity"></i></span><div class = 'home-description-list-item'>Unlimited sessions</div>
+            </div>
+            <p>Our detailed reports provide links to the modules and question types you need to polish to pass IRL.<br><br>
+
+                With our random question generator, it's unlikely you'll get the same combination of questions in any two sessions, 
+                so you can test till you drop without getting bored!</p>
+        </div>
+        <a class="home-call-to-action" href="/aws/cp/random" onclick="drillDeactivate()">Start now &#10097; &#10097; &#10097;</a>
+        
+    </div>
+    <div class="home-description">
+        <div class="home-description-title">Drill Mode</div>
+        <div class="home-description-text">
+            <p>
+                Just like <strong>Free Practice</strong>, except you get a little help from our automatic drill instructor (Auto DI)...<br><br>
+                Here's how that looks:
+            </p>
+            <div class="home-description-list">               
+                <span class="home-description-list-icon"><i class="bi bi-exclamation-square-fill"></i></span><div class = 'home-description-list-item'>Each time you get a question wrong, Auto DI takes note</div>
+                <span class="home-description-list-icon"><i class="bi bi-mortarboard-fill"></i></span><div class = 'home-description-list-item'>An icon next to the timer alerts you when Auto DI is active</div>
+                <span class="home-description-list-icon"><i class="bi bi-arrow-repeat"></i></span><div class = 'home-description-list-item'>Your next three questions (reps) will all be on the same topic as the one you got wrong</div>
+                <span class="home-description-list-icon"><i class="bi bi-hand-thumbs-up-fill"></i></span><div class = 'home-description-list-item'>Answer those questions correctly, and you'll go back to random questions</div>
+                <span class="home-description-list-icon"><i class="bi bi-clipboard2-check-fill"></i></span><div class = 'home-description-list-item'>Auto DI helps you identify creases in your learning and iron them out instantly</div>
+            </div>
+            <p>
+                There's nothing stopping you from going away to search for answers if you're really stuck.<br><br>
+                When you get back, Auto DI will check your learning and you'll be hammering those questions in no time!
+            </p>
+        </div>
+        <a class="home-call-to-action" href="/aws/cp/random" onclick="drillActivate()">Start now &#10097; &#10097; &#10097;</a>
+        
+    </div>
+</div>
+
+<script>
+     
+</script>
 
 {% endblock %}

@@ -1,15 +1,72 @@
-{% extends 'aws/base.html' %}
+{% extends 'aws/base.html' %}'
+
+
 
 {% block content %}
 
+<!--
+
+if drill active,
+
+if question answered incorrectly, make count 3,
+
+if question answered correctly count-=1
+
+if count!=0:
+
+get cert, module and question make specific url and call it
+for specific url
+
+else, go to random url
+
+button in corner which sends you to a url not including 'drill' if in drill mode
+OR including drill if not in drill mode
+
+if in drill mode, we need to know if Auto DI is active AND how many reps we need to do
+maybe populate the area where the reset button is with that
+indicator showing when autodi is active
+
+otherwise, we've got a lovely reset button right there!
+
+-->
+
 <script>
+    function drillActivate(){
+        var drillButton = document.getElementsByClassName('drill-button')[0];
+        drillButton.style.color='greenyellow';
+        drillButton.style.textShadow="\
+                                    0 0 7px #fff,\
+                                    0 0 21px #fff,\
+                                    0 0 42px #0fa,\
+                                    0 0 82px #0fa,\
+                                    0 0 92px #0fa,\
+                                    0 0 102px #0fa,\
+                                    0 0 151px #0fa";
+        if (getCookie('drill').split(',')[0]=='0'){
+            //console.log('no cookie here in use, so we made a new one!')
+            document.cookie = "drill=1,0;path=/;";// update cookie value
+        }
+        var drillActive='1';
+        console.log('drillActivate written in multi',drillActive,getCookie('drill'));
+    }
+
+    function drillDeactivate(){
+        // update button appearance
+        var drillButton = document.getElementsByClassName('drill-button')[0];
+        drillButton.style.color='orange';
+        drillButton.style.textShadow='-1px -1px 1px #fff, 1px 1px 1px #000';
+        // update cookie value
+        document.cookie = "drill=0,0;path=/;";
+        var drillActive='0';
+        //console.log('drillDeactivate written in multi',drillActive, getCookie('drill'));    
+    }
 
     document.title = "{{title}}"
 
     //Cookies dealing with time
-    console.log(getCookie("time"));
-    var start = Date.now()
-    
+    //console.log(getCookie("time"));
+    var start = Date.now()    
+
     if (getCookie("time") != ''){//if cookie for timing exists
         var sec = Number(getCookie('time'));//use that as value from which to count up
     } else {
@@ -25,16 +82,16 @@
     } else {
         var total = 0, correct = 0 //start from zero
     }
-
     var percentage = correct / total * 100;
     var time = sec;
     
+
     //var sec = 0;
-        function pad ( val ) { return val > 9 ? val : "0" + val; }
-        setInterval( function(){
-            document.getElementById("seconds").innerHTML=pad(++sec%60);
-            document.getElementById("minutes").innerHTML=pad(parseInt(sec/60,10));
-        }, 1000);
+    function pad ( val ) { return val > 9 ? val : "0" + val; }
+    setInterval( function(){
+        document.getElementById("seconds").innerHTML=pad(++sec%60);
+        document.getElementById("minutes").innerHTML=pad(parseInt(sec/60,10));
+    }, 1000);
     
     function getCookie(cname) {
       var name = cname + "=";
@@ -52,9 +109,19 @@
     }
     </script>
 
+<div class="question-report-inner">
+
 <div class = 'qtop'>
     <div class='stats-grid'>
-        <div class='reset' onclick=reset()>Reset stats</div>
+        <div class="left-top">
+            <div class='reset' onclick=reset()>Reset stats</div>
+            
+            <div class="auto-di-container">
+                <div class="auto-di-icon-container"><i class="bi bi-mortarboard-fill"></i></div>
+                <div class="auto-di-reps"><span id="reps"></span> reps due</div>
+                <div class="auto-di-rep-ticks"></div>
+            </div>
+        </div>
         <div class = 'timer'>
             <span id="minutes"></span>:<span id="seconds"></span>
         </div>
@@ -138,7 +205,7 @@
 
         <div class='button-div'>
             <div class='next-question-wrapper'>
-                <div class='next' onclick=next_question()>Next Question</div>
+                <div class='next' onclick=nextQuestion()>Next Question</div>
             </div>
         </div>
         
@@ -147,7 +214,48 @@
     
 </div>
 
+</div>
+
 <script>
+if (getCookie("drill") != ''){//if drill exists
+    //console.log('something in cookie in multi')
+    var drillCookieData = getCookie('drill').split(",");//use that as value from which to count up
+    //console.log('this is in cookie',drillCookieData)
+    var drillActive = drillCookieData[0];
+    var repCount = parseInt(drillCookieData[1]);
+    //console.log('repCount',repCount,typeof repCount)
+    //console.log('drillActive',drillActive,'repCount',repCount)
+    
+} else {
+    console.log('nothing in cookie')
+    var drillActive = '0';//start from zero
+    var repCount = 0;
+    document.cookie = "drill=0,0;path=/;";
+}
+if (drillActive=='0'){
+    drillDeactivate()
+} else if (drillActive=='1'){
+    drillActivate()
+}
+
+if (drillActive=='1'){
+    // display none for .reset and block for auto-di-containe
+    document.getElementsByClassName('reset')[0].style.display='none';
+    document.getElementsByClassName('auto-di-container')[0].style.display='grid';
+    
+    if (repCount!='0'){
+        document.getElementById('reps').innerHTML=repCount;
+        document.getElementsByClassName('auto-di-icon-container')[0].style.color='var(--first-light)';
+    } else {
+        document.getElementById('reps').innerHTML='0';
+        document.getElementsByClassName('auto-di-container')[0].style.color='silver';
+    }
+} else {
+    document.getElementsByClassName('reset')[0].style.display='block';
+    document.getElementsByClassName('auto-di-container')[0].style.display='none';
+}
+
+
 //populate dash
 try{
     document.getElementById('correct').innerHTML = correct.toString();
@@ -179,7 +287,9 @@ function multiChoiceSubmit(indicator, id) {
         if (indicator == 'correct'){
             correct = correct + 1
             document.getElementById(id).style.background='lightgreen';
-            document.getElementById(id + 'dot').style.background='green';    
+            document.getElementById(id + 'dot').style.background='green';
+            
+           
         } else {
             document.getElementById(id).style.background='pink';
             document.getElementById(id + 'dot').style.background='red';
@@ -189,6 +299,60 @@ function multiChoiceSubmit(indicator, id) {
         updateTotalCorrectCookie()//increment cookies
         updateDash()//update dash
         revealNextButtonAndHelps()//reveal next question button
+        drillDashHandler(indicator)
+        //console.log('indicator',indicator)
+        document.cookie = 'correctIncorrect='+indicator+';path=/'
+    }
+}
+
+var moduleStringCodeDict = {
+    'introduction':'cp1', 
+    'compute_in_the_cloud':'cp2', 
+    'global_infrastructure_and_reliability':'cp3', 
+    'networking':'cp4',
+    'storage_and_databases':'cp5',
+    'security':'cp6',
+    'monitoring_and_analytics':'cp7',
+    'pricing_and_support':'cp8', 
+    'migration_and_innovation':'cp9', 
+    'the_cloud_journey':'cp10'
+}
+
+function drillDashHandler(correctIncorrect){
+    var drillCookieData = getCookie('drill').split(",");//use that as value from which to count up
+    var drillActive = drillCookieData[0];
+    var repCount = parseInt(drillCookieData[1]);
+    if (drillActive=='1'){//if drill mode active
+        // if answer incorrect, set drill count to three, drillModuleDescription to moduleName and drill question to question name
+        if (correctIncorrect=='incorrect'){
+            var repCount=3;
+            document.getElementsByClassName('auto-di-icon-container')[0].style.color='var(--first-light)';
+            document.getElementsByClassName('auto-di-reps')[0].style.color='black';
+            document.getElementsByClassName('auto-di-rep-ticks')[0].textContent = '';
+        } else if (correctIncorrect=='correct'){// if answer correct
+            if (repCount>0){// reps still to go
+                repCount= repCount-1;
+                document.getElementsByClassName('auto-di-icon-container')[0].style.color='var(--first-light)';
+                document.getElementsByClassName('auto-di-reps')[0].style.color='black';
+                //var newElement = document.createElement('i')
+                //newElement.classList="bi bi-check-lg"
+                //document.getElementsByClassName('auto-di-rep-ticks')[0].appendChild(newElement);
+                var newElement = document.createElement('i');
+                newElement.classList="bi bi-hand-thumbs-up-fill";
+                document.getElementsByClassName('auto-di-rep-ticks')[0].appendChild(newElement);
+            }
+            if (repCount==0){
+                document.getElementsByClassName('auto-di-container')[0].style.color='silver';
+                document.getElementsByClassName('auto-di-rep-ticks')[0].textContent = '';
+                var newElement = document.createElement('i');
+                newElement.classList="bi bi-hand-thumbs-up-fill";
+                document.getElementsByClassName('auto-di-rep-ticks')[0].appendChild(newElement);
+            }
+        }
+
+        document.getElementById('reps').innerHTML=repCount.toString();
+        var drillCookieString = 'drill='+drillActive+','+repCount.toString()+';path=/';
+        document.cookie = drillCookieString;
     }
 }
 
@@ -264,7 +428,7 @@ function incrementFinalMarkIfCorrect(id){
 
 // called by multi choice submit
 function updateTotalCorrectCookie(){
-    console.log([total,correct].toString())
+    //console.log([total,correct].toString())
     document.cookie = "total_correct=" + [total,correct].toString();
 }
 
@@ -296,7 +460,7 @@ function processModuleCookieData(correctIncorrect){
         var moduleTotal = parseInt(moduleCookieData[0]);
         var moduleCorrect = parseInt(moduleCookieData[1]);
         var incorrectQuestions = moduleCookieData[2];
-        console.log('cookie exists and this is what we got:',moduleTotal, moduleCorrect)
+        //console.log('cookie exists and this is what we got:',moduleTotal, moduleCorrect)
     } else {
         var moduleTotal = 0, moduleCorrect = 0, incorrectQuestions = ''; //start from zero
     }
@@ -317,6 +481,8 @@ function processModuleCookieData(correctIncorrect){
     setCookie(moduleName, cValue);
     
 }
+
+
 
 
 function deleteCookie(cName){
@@ -361,43 +527,50 @@ function reset(){
     location.reload();
 }
 
-function next_question(){
-    //set timer cookie with current time
-    console.log('Just an int...');
+function nextQuestion(){
+    
     var end = Date.now();
     var total = Math.floor((end-start)/1000);
     var str_sec = sec.toString();
     var cookie_str = "time=" + str_sec;
     document.cookie = cookie_str;
-    location.reload();
+
+    var drillCookieData = getCookie('drill').split(",");//use that as value from which to count up
+    var drillActive = drillCookieData[0];
+    var repCount = parseInt(drillCookieData[1]);
+    if (drillActive=='1'){
+        console.log('drill is active and rep count', repCount);
+        if (repCount>0){
+            console.log('more than 0 reps due');
+            var url = window.location.href;
+            var urlList = url.split('/');
+            console.log(urlList);
+            if (urlList.slice(-2,-1)[0]=='random'){
+                var cert = urlList.slice(-3,-2)[0];
+                var new_url ='/'+'aws'+ "/"+'{{cert_name}}'+"/"+moduleStringCodeDict["{{module_name}}"]+'/'+'{{question_description}}';
+                console.log('new_url',new_url)
+                window.location.href = new_url;
+                //location.reload(new_url);
+            } else {
+                new_url ='/'+'aws'+ "/"+'{{cert_name}}'+"/"+moduleStringCodeDict["{{module_name}}"]+'/'+'{{question_description}}';
+                window.location.href = new_url;
+                //location.reload(new_url);
+            }
+        }else{
+            var new_url ='/'+'aws'+ "/"+'{{cert_name}}'+"/"+"random";
+            window.location.href = new_url;
+            //location.reload(new_url);
+        }
+    } else{
+        location.reload();
     }
+}
+
+
 
 //sets a cookie with a given name and value
 function setCookie (cName, cValue){//sets a cookie
     document.cookie = `${cName}=${cValue};path=/`;
-}
-
-console.log("one!two!three!".split('!'))
-console.log("".split('!'))
-
-
-
-
-//either returns the value of a cookie or "nope" if cookies doesn't exist
-function getCookie(cname) {
-    var name = cname + "=";
-    var decodedCookie = decodeURIComponent(document.cookie);
-    var ca = decodedCookie.split(';');
-    for(var i = 0; i <ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0) == ' ') {
-            c = c.substring(1);
-        }
-        if (c.indexOf(name) == 0) {
-            return c.substring(name.length, c.length);
-        }
-    }
-    return "nope";
 }
 
 // increases value of any given cookie storing only one integer, default of 1

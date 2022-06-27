@@ -7,7 +7,11 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=PT+Sans:wght@500&display=swap" rel="stylesheet">
+
+        <link href="https://fonts.googleapis.com/css2?family=PT+Sans:wght@500&display=swap" rel="stylesheet" type='text/css' media="all">
+
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
+
 
         <style>
             * {
@@ -20,15 +24,15 @@
             }
 
             html{    
-                background-image: linear-gradient(to bottom right, var(--second-light), var(--first-dark));
+                background-image: linear-gradient(to bottom right, var(--second-light)70%, var(--first-dark));
                 font-family: 'PT Sans', sans-serif;
                 color: rgb(97, 97, 97);
                 font-weight: 100;
                 margin:0;
                 padding:0;
-                height:100%;
-                
+                height:max-content;
             }
+
             @media only screen and (max-width: 660px) {
                 html{ 
                     color:black;
@@ -37,7 +41,6 @@
             }
             
             body{
-                
                 margin:0;
                 padding:0;
                 
@@ -61,8 +64,7 @@
             .header{
                 background-color: rgb(0,0,0,0);
                 display: grid;
-                grid-template-columns: 26ch auto 14ch;
-                 
+                grid-template-columns: 26ch auto 14ch 14ch;              
                 
                 padding:1ch;
                 margin-left:5vw;
@@ -71,6 +73,22 @@
                 color: white;
                 
             }
+
+            @media only screen and (max-width: 660px) {
+                .header{
+                    background-color: rgb(0,0,0,0);
+                    display: grid;
+                    grid-template-columns: auto;              
+                    
+                    padding:1ch;
+                    margin-left:5vw;
+                    margin-right:5vw;
+
+                    color: white;
+                
+                }
+            }
+
             .header-logo{
                 color: white;
                 min-width:max-content;
@@ -81,6 +99,18 @@
                 cursor: pointer;   
             }
             
+            .drill-button{
+                background-image: linear-gradient(to bottom, rgb(255, 185, 119) 2%, var(--first-light) 70%, rgb(217, 106, 2) 100%);
+                margin:auto;
+                padding:1ch;
+                font-weight:600;
+                border-style:none;
+                border-radius:4px;  
+
+   
+            }
+
+
             .report-button{
                 background-image: linear-gradient(to bottom, rgb(255, 185, 119) 2%, var(--first-light) 70%, rgb(217, 106, 2) 100%);
                 margin:auto;
@@ -90,44 +120,100 @@
                 font-weight:600;
 
                 border-style:none;
-                border-radius:4px;
-                                
+                border-radius:4px;         
             }
-            .report-button:hover{
+
+
+           
+
+            .report-button:hover, .drill-button:hover{
                 transform: scale(1.1) translate(0%, 3%);
                 box-shadow: 0px 5px 8px 0px black;
                 cursor: pointer;   
                 transition:0.5s;
             }
 
-            .home-inner{
-                text-align: center;
-                padding-top: 1vh;
-            }  
-
-            .introduction{
-                padding:2%;
-                margin-top:1%;
-                text-align: left;
-                margin-left: auto;
-                margin-right: auto;
-            }
-
-            .introduction-box{
-                width:50%;
-            }
-
+            
+            
             .main{
                 padding:1%;                
             }
 
-            .menu{
-                margin:5vw;
+           
+            .main-container{
+                margin:5%;
+                margin-top:1vw;
             }
 
-            .main-inner{
-                margin:5vw;
-                margin-top:1vw;
+            .home-inner{
+                display:grid;
+                grid-template-columns: 49% 49%;
+                grid-column-gap:2%;
+            }
+
+            @media only screen and (max-width: 900px) {
+                .home-inner{
+                    display:grid;
+                    grid-template-columns: auto;
+                    grid-row-gap:5%;
+                }
+            }
+
+            .home-description{
+                padding:20px;
+                background-color:var(--second-light);
+                
+                border-style: solid;
+                border-radius: 4px;
+                border-color:white;
+                box-shadow: 0px 20px 50px -10px var(black);
+                }
+            
+            .home-description-title{
+                color:var(--first-light);
+                font-size:x-large;
+                font-weight: 600;
+            }
+
+            .home-description-text{
+                color:white;
+            }
+            .home-description-list{
+                display:grid;
+                grid-template-columns: 25% auto;
+                grid-row-gap: 0.5ch;
+            }
+            .home-description-list-icon{
+                font-size: x-large;
+                margin:auto;
+
+            }
+            
+            .home-description-list-item{
+                margin-top:auto;
+                margin-bottom:auto;
+            }
+
+            .home-call-to-action{
+                color:white;
+                font-size:4ch;
+                margin-left:auto;
+                margin-right:auto;
+                text-align: center;
+                
+                margin-bottom:0;
+
+            }
+
+            .home-call-to-action:hover{
+                
+                color:var(--first-light);
+                cursor:pointer;
+                
+            }
+            
+
+            .question-report-inner{
                 background-color:var(--third-light);
                 box-shadow: 0px 20px 50px -10px var(black);          
             }
@@ -195,8 +281,8 @@
                     grid-template-columns: auto;
                     height: min-content;
                     text-align: center;
-                    }
                 }
+            }
 
 			.stats-item{
 				margin:0%;
@@ -234,7 +320,26 @@
 				background-color: var(--second-light);
 				transition:200ms;
 			}
-
+            .auto-di-container{
+                display:grid;
+                grid-template-columns: 40% 30% 30%;
+            }
+            .auto-di-icon-container{
+                margin-right:3%;
+                text-align: right;
+                font-size: large;
+            }
+            .auto-di-reps{
+                margin-left:3%;
+                text-align: left;
+                font-size: large;
+            }
+            .auto-di-rep-ticks{
+                color:lime;
+                margin-left:2%;
+                text-align: left;
+                font-size: large;
+            }
             
             @keyframes slideInFromBottom {
                 0% {
@@ -434,29 +539,54 @@
     </head>
 
     <body>
-        
-
-        
-        <!--
-        <div class = 'header'>
-            <div class = 'header-logo'>CISMP Practise</div>
+        <script>
+            function getCookie(cname) {
+                var name = cname + "=";
+                var ca = document.cookie.split(';');
+                for(var i = 0; i < ca.length; i++) {
+                    var c = ca[i];
+                    while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                    }
+                    if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                    }
+                }
+                return "";
+            }
             
-            <div class = 'header-info'>Current Module</div>
-            <div class ='header-right'>Right hand icons</div>
-        </div>
-        -->
+            
+
+        </script>
         <div class = 'main'>
             <div class = 'header'>
                 <a class = 'header-logo' href = '/aws' title="Home page">AWS Certification Practice</a>
                 <div></div>
+                <a class = 'drill-button' title="Turn on drill mode" onclick="drillToggle()">Drill Mode <i class="bi bi-power"></i></a>
                 <a class = 'report-button' href ='/aws/report' target="_blank" title="Generate a report on your most recent session (requires cookies!)">View Report</a>
             </div>
-
-            <div class='main-inner'>
+            <div class="main-container">
                 {% block content %}
                 {% endblock %}
             </div>
         </div>
+        <script>
+            
+            function drillToggle(){
+                if (drillActive=='0'){
+                    drillActivate()
+                } else {
+                    drillDeactivate()
+                    //if (window.location.href.split('/').slice(-2, -1)[0]!='aws'){
+                    //    var new_url ='/'+'aws'+ "/"+'{{cert_name}}'+"/"+"random";
+                    //    window.location.href = new_url;
+                    //}
+                }
+                location.reload()
+            }
 
+            
+
+        </script>
     </body>
 </html>
