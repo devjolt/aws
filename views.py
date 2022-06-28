@@ -19,7 +19,7 @@ if platform.system() == 'Windows':
     SEARCH_PATTERN = "modules\\\\(.*?).py"
     RESOURCE_INPUT_QUESTIONS_PATH = '\\resource_input_questions'
 else:
-    SEARCH_PATTERN = "modules/(.*?).py"
+    SEARCH_PATTERN = "modules(.*?).py"
     RESOURCE_INPUT_QUESTIONS_PATH = '/resource_input_questions'
 
 module_str_to_name_dict = {

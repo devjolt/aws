@@ -451,6 +451,46 @@ function revealNextButtonAndHelps(){
 // handle report cookies with module names storing two integers and a list of questions as follows:
 // "migration_and_innovation=10$5$snow family!another question!question about:this"
 // turn cookies into module total, correct and array of question descriptions
+
+/*
+function processModuleCookieData(correctIncorrect){
+    var moduleName = "{{module_name}}"
+
+    if (getCookie(moduleName) != 'nope'){//if cookie exists
+        var moduleCookieData = getCookie(moduleName).split("$");
+        var moduleTotal = parseInt(moduleCookieData[0]);
+        var moduleCorrect = parseInt(moduleCookieData[1]);
+        var incorrectQuestions = moduleCookieData[2];
+        if (typeof incorrectQuestions == "undefined"){
+            console.log('incorrectQuestions',incorrectQuestions, 'undefined')
+            incorrectQuestions='';
+        }
+        //console.log('cookie exists and this is what we got:',moduleTotal, moduleCorrect)
+    } else {
+        var moduleTotal = 0, moduleCorrect = 0, incorrectQuestions = ''; //start from zero
+        var incorrectQuestions='';
+    }
+    console.log('incorrectQuestions',incorrectQuestions)
+    moduleTotal+=1;
+    if(correctIncorrect == 'correct'){
+        moduleCorrect+=1;
+    }else if(correctIncorrect == 'incorrect'){
+        var questionDescription = "{{question_description}}";
+        if(incorrectQuestions.slice(0).includes(questionDescription)){
+
+        }else{
+            incorrectQuestions = incorrectQuestions + questionDescription + '!';
+        }
+
+    }
+    console.log(moduleTotal, moduleCorrect, incorrectQuestions)
+    var cValue = moduleTotal.toString() + '$' + moduleCorrect.toString() + '$' + incorrectQuestions;
+    setCookie(moduleName, cValue);
+
+}
+*/
+
+
 function processModuleCookieData(correctIncorrect){
 
     var moduleName = "{{module_name}}"
@@ -478,8 +518,7 @@ function processModuleCookieData(correctIncorrect){
     }
     console.log(moduleTotal, moduleCorrect, incorrectQuestions)
     var cValue = moduleTotal.toString() + '$' + moduleCorrect.toString() + '$' + incorrectQuestions;
-    setCookie(moduleName, cValue);
-    
+    setCookie(moduleName, cValue);  
 }
 
 
