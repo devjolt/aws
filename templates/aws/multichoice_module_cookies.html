@@ -500,10 +500,14 @@ function processModuleCookieData(correctIncorrect){
         var moduleTotal = parseInt(moduleCookieData[0]);
         var moduleCorrect = parseInt(moduleCookieData[1]);
         var incorrectQuestions = moduleCookieData[2];
-        //console.log('cookie exists and this is what we got:',moduleTotal, moduleCorrect)
+        if (typeof incorrectQuestions == 'undefined'){
+            incorrectQuestions='';
+        }
+        
     } else {
         var moduleTotal = 0, moduleCorrect = 0, incorrectQuestions = ''; //start from zero
     }
+    console.log('incorrectQuestions',incorrectQuestions)
     moduleTotal+=1;
     if(correctIncorrect == 'correct'){
         moduleCorrect+=1;

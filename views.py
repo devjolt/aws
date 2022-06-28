@@ -19,7 +19,7 @@ if platform.system() == 'Windows':
     SEARCH_PATTERN = "modules\\\\(.*?).py"
     RESOURCE_INPUT_QUESTIONS_PATH = '\\resource_input_questions'
 else:
-    SEARCH_PATTERN = "modules(.*?).py"
+    SEARCH_PATTERN = "modules/(.*?).py"
     RESOURCE_INPUT_QUESTIONS_PATH = '/resource_input_questions'
 
 module_str_to_name_dict = {
@@ -119,7 +119,10 @@ class RandomModuleView(TemplateView):
         module = choice(self.modules)
         
         #changes search pattern depending on whether we're on Windows or Linux
-        module_str = re.search(SEARCH_PATTERN, str(module))[1][1:]
+        if platform.system() == 'Windows':
+            module_str = re.search(SEARCH_PATTERN, str(module))[1][-1]
+        else:
+            module_str = re.search(SEARCH_PATTERN, str(module))[1]
         print('module_str',module_str)
         
         print('module_str:',module_str)
