@@ -116,13 +116,12 @@ class RandomModuleView(TemplateView):
         #changes search pattern depending on whether we're on Windows or Linux
         if platform.system() == 'Windows':
             #SEARCH_PATTERN = "modules\\\\(.*?).py"
-            #RESOURCE_INPUT_QUESTIONS_PATH = '\\resource_input_questions'
+            RESOURCE_INPUT_QUESTIONS_PATH = '\\resource_input_questions'
             #module_str = re.search(SEARCH_PATTERN, str(module))[1][-1]
             module_str=str(module).split('\\\\')[-1][:-5]
         else:
             #SEARCH_PATTERN = "modules/(.*?).py"
-            #RESOURCE_INPUT_QUESTIONS_PATH = '/resource_input_questions'
-
+            RESOURCE_INPUT_QUESTIONS_PATH = '/resource_input_questions'
             #module_str = re.search(SEARCH_PATTERN, str(module))[1]
             module_str=str(module).split('/')[-1][:-5]
         print('module_str',module_str)
