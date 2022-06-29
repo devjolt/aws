@@ -55,16 +55,16 @@ questions = {
             'Availability of Lambda',
         ),
     },
-    'Region_selection': {
+    'Selecting_an_AWS_region': {
         'question_with_0':'Which of the following factors are most related to PLACEHOLDER?',
-        'question_with_1':'Which factor of selecting a region is the following related to: PLACEHOLDER',
+        'question_with_1':'Which factor of selecting a region is most relevant to the following: PLACEHOLDER',
         'type':['new_pairs'],
         'course_code':'',
         'pairs':(
-            ('Proximity to your customers','get content to customers faster'),
-            ('Available services within a Region','closest Region might not have all the features that you want to offer to customers'),
-            ('Pricing','Less expensive compute time in one region compared to another'),
-            ('Compliance with data governance and legal requirements',['GDPR', 'you might need to run your data out of specific areas']),
+            ('Proximity to your customers','being able to get content to customers faster'),
+            ('Available services within a Region','the fact that the closest Region might not have all the features that you want to offer to customers'),
+            ('Pricing','compute time in one region compared to another'),
+            ('Compliance with data governance and legal requirements',['GDPR', 'needing to run your data out of specific areas']),
         ),
         'fillers': ()
     },

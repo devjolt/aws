@@ -67,9 +67,9 @@ questions = {
             'Security Excellence',
             'Efficiency',
             'Performance Reliability',
-            'Performance Optimisation'
-            'Performance Excellence'
-            'Performance security'
+            'Performance Optimisation',
+            'Performance Excellence',
+            'Performance security',
             'Excellence',
             'Efficiency',
             'Cost',
@@ -84,7 +84,7 @@ questions = {
             'Security Cost',
             'Reliability Excellence',
             'Reliability Efficiency',
-            'Reliability Cost'
+            'Reliability Cost',
             ],'predicting resource needs in advance'
             )
         )

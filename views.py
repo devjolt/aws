@@ -151,6 +151,11 @@ class RandomModuleView(TemplateView):
             # Seven different types of questions you can have... assuming that if a dict, it'll be one of them                        
             
             #makeing a list of all files in question logic module
+            
+            if platform.system() == 'Windows':
+                RESOURCE_INPUT_QUESTIONS_PATH = '\\resource_input_questions'
+            else:
+                RESOURCE_INPUT_QUESTIONS_PATH = '/resource_input_questions'
             pkgpath = os.path.dirname(ql.__file__)
             question_logic_files = [name for _, name, _ in pkgutil.iter_modules([pkgpath + RESOURCE_INPUT_QUESTIONS_PATH])]
             
@@ -279,7 +284,7 @@ def SpecificAreaView(request, module_str, key):
     context['question_description'] = key
     
     context['cert_name'] = re.sub('[0-9]+', '', module_str)
-        
+    context['question_description_link'] = 'https://duckduckgo.com/?q=' + key.replace('_', '+')
     # question module name
     context['module_name'] = module_object_to_name_dict[module]
     context['title'] = 'AWS ' + re.sub('_', ' ', module_object_to_name_dict[module]).capitalize()  
@@ -331,7 +336,7 @@ def test_question(request):
 
     context = {}
     context['cert_name'] = re.sub('[0-9]+', '',module_str)
-
+    context['question_description_link'] = 'https://duckduckgo.com/?q=' + key.replace('_', '+')
     context['question'], context['items'] = template_question, items
     # Question type may tell the template how to handle the question if needed.
     context['question_type'] = question_type

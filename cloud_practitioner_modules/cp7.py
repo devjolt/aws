@@ -71,16 +71,16 @@ questions = {
         'correct':(
             'records API calls for your account',
             'records the identity of the API caller, the time of the API call, the source IP address of the API caller, and more',
-            'a log of actions',
-            'view a complete history of user activity and API calls for your applications and resources',
+            'provides a log of actions',
+            'allows you to view a complete history of user activity and API calls for your applications and resources',
             'events are typically updated within 15 minutes after an API call',
-            'filter by specifying the time and date that an API call occurred, the user who requested the action, the type of resource that was involved in the API call, and more',
+            'can filter by specifying the time and date that an API call occurred, the user who requested the action, the type of resource that was involved in the API call, and more',
             'has an optional feature which allows automatic detection of unusual API activities in your AWS account',
         ),
 
         'incorrect': (
             f"{choice(['cost optimization','performance','security','fault tolerance','service limits'])} is a Trusted Advisor category",
-            f"offers {choice(['a list of recommended actions','additional resources to learn more about AWS best practices'])}"
+            f"offers {choice(['a list of recommended actions','additional resources to learn more about AWS best practices'])}",
             f"completed checks for {choice(['cost optimization','performance','security','fault tolerance','service limits'])} are available on the dashboard",
             "green checks here indicate the number of items for which no problem was detected",
             "orange triangle here indicate the number of recommended investigations",
@@ -108,9 +108,9 @@ questions = {
         'course_code':'',
         'correct':(
             f"{choice(['cost optimization','performance','security','fault tolerance','service limits'])} is a Trusted Advisor category",
-            f"Trusted Advisor offers {choice(['a list of recommended actions','additional resources to learn more about AWS best practices'])}"
+            f"Trusted Advisor offers {choice(['a list of recommended actions','additional resources to learn more about AWS best practices'])}",
             f"completed checks for {choice(['cost optimization','performance','security','fault tolerance','service limits'])} are available on the Trusted Advisor dashboard",
-            "the Trusted Advisor dashboard is accessed through the AWS Management Console",
+            "the dashboard is accessed through the AWS Management Console",
             "green checks indicate the number of items for which no problem was detected",
             "orange triangle indicates the number of recommended investigations",
             "the red circle represents the number of recommended actions",
@@ -119,9 +119,9 @@ questions = {
         'incorrect': (
             
             f"{choice(['performance optimization','implementation','cost savings','elastic load','instance runtime'])} is a Trusted Advisor category",
-            f"Trusted Advisor offers {choice(['automatic adjustment of spending','alarms triggered by metrics', 'a way to track API activity'])}"
+            f"offers {choice(['automatic adjustment of spending','alarms triggered by metrics', 'a way to track API activity'])}",
             f"completed checks for {choice(['performance optimization','implementation','cost savings','elastic load','instance runtime'])} are available on the Trusted Advisor dashboard",
-            "the Trusted Advisor dashboard is accessed through the AWS CLI",
+            "the dashboard is accessed through the AWS CLI",
             f"{choice(['red', 'orange'])} {choice(['checks', 'triangles', 'circles'])} indicates the number of items for which no problem was detected",
             f"{choice(['red', 'green'])} {choice(['checks', 'triangles', 'circles'])} indicates the number of recommended investigations",
             f"the {choice(['green', 'orange'])} {choice(['check', 'triangle', 'circle'])} represents the number of recommended actions",
