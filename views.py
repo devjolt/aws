@@ -15,13 +15,7 @@ from .utilities import utilities as utl
 import question_logic as ql
 from question_logic.all import *
 
-if platform.system() == 'Windows':
-    SEARCH_PATTERN = "modules\\\\(.*?).py"
-    RESOURCE_INPUT_QUESTIONS_PATH = '\\resource_input_questions'
-else:
-    SEARCH_PATTERN = "modules/(.*?).py"
-    RESOURCE_INPUT_QUESTIONS_PATH = '/resource_input_questions'
-
+    
 module_str_to_name_dict = {
     'cp1':'introduction', 
     'cp2':'compute_in_the_cloud', 
@@ -118,14 +112,21 @@ class RandomModuleView(TemplateView):
         # 'modules' is a tuple containing module names passed into the view in urls.py. And we're picking one of them. 
         module = choice(self.modules)
         
+        print(str(module))
         #changes search pattern depending on whether we're on Windows or Linux
         if platform.system() == 'Windows':
-            module_str = re.search(SEARCH_PATTERN, str(module))[1][-1]
+            #SEARCH_PATTERN = "modules\\\\(.*?).py"
+            #RESOURCE_INPUT_QUESTIONS_PATH = '\\resource_input_questions'
+            #module_str = re.search(SEARCH_PATTERN, str(module))[1][-1]
+            module_str=str(module).split('\\\\')[-1][:-5]
         else:
-            module_str = re.search(SEARCH_PATTERN, str(module))[1]
+            #SEARCH_PATTERN = "modules/(.*?).py"
+            #RESOURCE_INPUT_QUESTIONS_PATH = '/resource_input_questions'
+
+            #module_str = re.search(SEARCH_PATTERN, str(module))[1]
+            module_str=str(module).split('/')[-1][:-5]
         print('module_str',module_str)
-        
-        print('module_str:',module_str)
+     
         # Each module contains a dictionary called questions and we're picking one of the questions in that dictionary. 
         key = choice(tuple(module.questions.keys()))#from module, get key
         print('key:',key)
@@ -195,7 +196,7 @@ class RandomModuleView(TemplateView):
         context['title'] = 'AWS Cloud Practitioner Practice'
         key_link = key.replace(',', '')
         # what is this?
-        context['key_link'] = key_link.replace(' ', '+').lower()
+        context['question_description_link'] = 'https://duckduckgo.com/?q=' + key.replace('_', '+')
         # We set this timer at the top so let's stop it now and see how long all that took!
         
         #print('object to name:', module_object_to_name_dict[module])
