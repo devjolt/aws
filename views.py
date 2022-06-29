@@ -16,6 +16,11 @@ import question_logic as ql
 from question_logic.all import *
 
     
+if platform.system() == 'Windows':
+    RESOURCE_INPUT_QUESTIONS_PATH = '\\resource_input_questions'
+else:
+    RESOURCE_INPUT_QUESTIONS_PATH = '/resource_input_questions'
+
 module_str_to_name_dict = {
     'cp1':'introduction', 
     'cp2':'compute_in_the_cloud', 
@@ -111,19 +116,17 @@ class RandomModuleView(TemplateView):
         context = super().get_context_data(**kwargs)
         # 'modules' is a tuple containing module names passed into the view in urls.py. And we're picking one of them. 
         module = choice(self.modules)
-        
-        print(str(module))
-        #changes search pattern depending on whether we're on Windows or Linux
         if platform.system() == 'Windows':
             #SEARCH_PATTERN = "modules\\\\(.*?).py"
-            RESOURCE_INPUT_QUESTIONS_PATH = '\\resource_input_questions'
             #module_str = re.search(SEARCH_PATTERN, str(module))[1][-1]
             module_str=str(module).split('\\\\')[-1][:-5]
         else:
             #SEARCH_PATTERN = "modules/(.*?).py"
-            RESOURCE_INPUT_QUESTIONS_PATH = '/resource_input_questions'
             #module_str = re.search(SEARCH_PATTERN, str(module))[1]
             module_str=str(module).split('/')[-1][:-5]
+ 
+        print(str(module))
+        #changes search pattern depending on whether we're on Windows or Linux
         print('module_str',module_str)
      
         # Each module contains a dictionary called questions and we're picking one of the questions in that dictionary. 
