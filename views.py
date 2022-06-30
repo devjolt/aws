@@ -15,11 +15,44 @@ from .utilities import utilities as utl
 import question_logic as ql
 from question_logic.all import *
 
+def populate_question_logic_dict()->dict:
+    # make the path appropriately depending on OS
+    if platform.system() == 'Windows':
+        RESOURCE_INPUT_QUESTIONS_PATH = '\\resource_input_questions'
+    else:
+        RESOURCE_INPUT_QUESTIONS_PATH = '/resource_input_questions'
     
-if platform.system() == 'Windows':
-    RESOURCE_INPUT_QUESTIONS_PATH = '\\resource_input_questions'
-else:
-    RESOURCE_INPUT_QUESTIONS_PATH = '/resource_input_questions'
+    # list the question logic files using imported ql
+    pkgpath = os.path.dirname(ql.__file__)
+    question_logic_files = [name for _, name, _ in pkgutil.iter_modules([pkgpath + RESOURCE_INPUT_QUESTIONS_PATH])]
+
+    # put all logic files into a dictionary so we can use their logic
+    question_logic_dict = {} # populating question logic dictionary
+    for file_name in question_logic_files:
+        if file_name not in ['all']:
+            #print(file_name)
+            exec(f"question_logic_dict['{file_name}']={file_name}.logic")
+    return question_logic_dict
+
+def generate_template_question_and_items(module:'object containing questions dict', key:str)->'template_question, items':
+    if type(module.questions[key]) == dict:
+        question_dict = module.questions[key] #get the dict
+        if type(question_dict['type'])==str: # If resource type is just a string, there is only one.
+            resource_type=question_dict['type']
+        else: # resource type is a list/tuple 
+            resource_type=choice(question_dict['type'])# and needs to be selected 
+        print('resource_type:',resource_type)
+        
+        question_logic_dict = populate_question_logic_dict() # line 24ish in this file
+        
+        template_question, items = question_logic_dict[resource_type](question_dict)
+
+    else:
+        # Otherwise, we'd better assume we're using a set of unique question logic and try to use that.
+        print('logic type question')# Self contained generating its own question and items.
+        template_question, items = module.questions[key]()
+    shuffle(items) # item order needs to be randomised
+    return template_question, items 
 
 module_str_to_name_dict = {
     'cp1':'introduction', 
@@ -87,6 +120,8 @@ class RandomModuleView(TemplateView):
     template_name = 'aws/multichoice_module_cookies.html'
     
     def biased_module_picker(self):
+        """currently does precisely nothing
+        """
         val = randint(1, 100)
         if 1<=val<10:
             return  cp1
@@ -110,233 +145,73 @@ class RandomModuleView(TemplateView):
             return cp10
     
     def get_context_data(self, **kwargs):
-        # Timing how long all this takes, out of interest. We'll stop this timer later
-        start = time.time()
-        # We're going to mess with context data, so we make a context object to mess with.
-        context = super().get_context_data(**kwargs)
+        start = time.time() # Timing how long all this takes. We'll stop this timer later
+        context = super().get_context_data(**kwargs) # make a context object to mess with.
         # 'modules' is a tuple containing module names passed into the view in urls.py. And we're picking one of them. 
         module = choice(self.modules)
-        if platform.system() == 'Windows':
-            #SEARCH_PATTERN = "modules\\\\(.*?).py"
-            #module_str = re.search(SEARCH_PATTERN, str(module))[1][-1]
-            module_str=str(module).split('\\\\')[-1][:-5]
-        else:
-            #SEARCH_PATTERN = "modules/(.*?).py"
-            #module_str = re.search(SEARCH_PATTERN, str(module))[1]
-            module_str=str(module).split('/')[-1][:-5]
- 
-        print(str(module))
-        #changes search pattern depending on whether we're on Windows or Linux
-        print('module_str',module_str)
-     
         # Each module contains a dictionary called questions and we're picking one of the questions in that dictionary. 
         key = choice(tuple(module.questions.keys()))#from module, get key
-        print('key:',key)
-        question_type = 'multi-choice'
-        # v Uncomment to use a specific question in a specific module:
-        #module = _1
-        #key = 'test_question'
-        # If chosen module and key contains a dict, we can use it directly to produce question and items
-        if type(module.questions[key]) == dict:
-            question_dict = module.questions[key]#get the dict
-            
-            # If resource type is just a string, there is only one.
-            if type(question_dict['type'])==str:
-                resource_type=question_dict['type']
-            else:
-                # Else, resource type is a list/tuple and needs to be selected.
-                resource_type=choice(question_dict['type'])
-            print('resource_type:',resource_type)
-
-            # Seven different types of questions you can have... assuming that if a dict, it'll be one of them                        
-            
-            #makeing a list of all files in question logic module
-            
-            if platform.system() == 'Windows':
-                RESOURCE_INPUT_QUESTIONS_PATH = '\\resource_input_questions'
-            else:
-                RESOURCE_INPUT_QUESTIONS_PATH = '/resource_input_questions'
-            pkgpath = os.path.dirname(ql.__file__)
-            question_logic_files = [name for _, name, _ in pkgutil.iter_modules([pkgpath + RESOURCE_INPUT_QUESTIONS_PATH])]
-            
-            question_logic_dict = {}
-
-            for file_name in question_logic_files:
-                if file_name not in ['all']:
-                    #print(file_name)
-                    exec(f"question_logic_dict['{file_name}']={file_name}.logic")
-            
-            """
-            question_logic_dict = {
-                'multi_option_from_correct_incorrect':utl.multi_option_from_correct_incorrect,
-                'make_items_question_from_correct_incorrect':utl.make_items_question_from_correct_incorrect,
-                'make_items_question_from_pairs':utl.make_items_question_from_pairs,
-                'posneg_pairs':utl.posneg_pairs,
-                'new_pairs':utl.new_pairs,
-                'multi_option_pairs':utl.multi_option_pairs,
-                'order_from_pairs':utl.order_from_pairs,
-                'pairs_name_dict_attributes':utl.pairs_name_dict_attributes,
-                'auto_correct_incorrect':utl.auto_correct_incorrect,
-                'code_block_question':utl.code_block_question
-                }
-            """
-            template_question, items = question_logic_dict[resource_type](question_dict)
-
-        else:
-            # Otherwise, we'd better assume we're using a set of unique question logic and try to use that.
-            print('logic type question')# Self contained generating its own question and items.
-            template_question, items = module.questions[key]()
-    
-        shuffle(items) # We don't want the order of the items to be predictable.
-        # Put question list and items in dictionary.
-        context['question'], context['items'] = template_question, items
-        # Question type may tell the template how to handle the question if needed.
-        context['question_type'] = question_type
-        # Question key, acting as a question description
-        context['question_description'] = key
-        # question module name
-        cert_str =  re.sub('[0-9]+', '', module_str)
-        print(cert_str)
-        context['cert_name'] = cert_str
-        context['module_name'] = module_object_to_name_dict[module]
-        # context['module_name'][f'{module_name_dict[module_str]}']
-        context['title'] = 'AWS Cloud Practitioner Practice'
-        key_link = key.replace(',', '')
-        # what is this?
-        context['question_description_link'] = 'https://duckduckgo.com/?q=' + key.replace('_', '+')
-        # We set this timer at the top so let's stop it now and see how long all that took!
         
-        #print('object to name:', module_object_to_name_dict[module])
-        #print('str to name:', module_str_to_name_dict[module_str])
-        stop = time.time()
-        print('time taken:', stop-start)#interesting to know...
+        slashes = '\\\\' if platform.system() == 'Windows' else '/'# if running in windows, split with \\
+        module_str=str(module).split(slashes)[-1][:-5] # and assuming anything else is Linux / 
+         
+        print(str(module)) # the only way we know what the module is
+        print('module_str',module_str) # just checking we have the module code too
+        print('key:',key) # and seeing what the key is
+
+        question_type = 'multi-choice' # always multi choice at the moment, the logic for multi selection is broken!
+
+        template_question, items = generate_template_question_and_items(module, key) # see above
+
+        # Put question list and items in context dictionary.
+        context['question'], context['items'] = template_question, items
+        context['question_type'] = question_type # Question type may tell the template how to handle the question if needed.
+        context['question_description'] = key # Question key, acting as a question description
+        context['cert_name'] = re.sub('[0-9]+', '', module_str)# needed in case we switch to specific question
+        context['module_name'] = module_object_to_name_dict[module]# question module name needed as above
+        context['title'] = 'AWS Cloud Practitioner Practice'# may change later...
+        context['question_description_link'] = 'https://duckduckgo.com/?q=aws+' + key.replace('_', '+') # used to link if needed
+        # We set this timer at the top so let's stop it now and see how long all that took!
+        print('time taken:', time.time()-start)#interesting to know...
         return context
 
 def SpecificAreaView(request, module_str, key):
-    print(request.COOKIES['drill']  )
+    start = time.time() # Timing how long all this takes. Stopped and printed later
     module = module_str_to_object_dict[module_str]
-
-    #should possible use a different template, without reset button or module cookies. A drill template?
-    template_name = 'aws/multichoice_module_cookies.html'
+    question_type = 'multi-choice' # the only question type we're using in this app at the moment!
     
-    # Timing how long all this takes, out of interest. We'll stop this timer later
-    start = time.time()
-    # 'modules' is a tuple containing module names passed into the view in urls.py. And we're picking one of them. 
-    print(module, key)
-    question_type = 'multi-choice'
-    # v Uncomment to use a specific question in a specific module:
-    #module = _1
-    #key = 'test_question'
-    # If chosen module and key contains a dict, we can use it directly to produce question and items
-    if type(module.questions[key]) == dict:
-        question_dict = module.questions[key]#get the dict
-        
-        # If resource type is just a string, there is only one.
-        if type(question_dict['type'])==str:
-            resource_type=question_dict['type']
-        else:
-            # Else, resource type is a list/tuple and needs to be selected.
-            resource_type=choice(question_dict['type'])
-        print('resource_type:',resource_type)
-
-        # Seven different types of questions you can have... assuming that if a dict, it'll be one of them                        
-        
-        #makeing a list of all files in question logic module
-        pkgpath = os.path.dirname(ql.__file__)
-        question_logic_files = [name for _, name, _ in pkgutil.iter_modules([pkgpath + RESOURCE_INPUT_QUESTIONS_PATH])]
-        
-        question_logic_dict = {}
-
-        for file_name in question_logic_files:
-            if file_name not in ['all']:
-                print(file_name)
-                exec(f"question_logic_dict['{file_name}']={file_name}.logic")
-        
-        """
-        question_logic_dict = {
-            'multi_option_from_correct_incorrect':utl.multi_option_from_correct_incorrect,
-            'make_items_question_from_correct_incorrect':utl.make_items_question_from_correct_incorrect,
-            'make_items_question_from_pairs':utl.make_items_question_from_pairs,
-            'posneg_pairs':utl.posneg_pairs,
-            'new_pairs':utl.new_pairs,
-            'multi_option_pairs':utl.multi_option_pairs,
-            'order_from_pairs':utl.order_from_pairs,
-            'pairs_name_dict_attributes':utl.pairs_name_dict_attributes,
-            'auto_correct_incorrect':utl.auto_correct_incorrect,
-            'code_block_question':utl.code_block_question
-            }
-        """
-        template_question, items = question_logic_dict[resource_type](question_dict)
-
-    else:
-        # Otherwise, we'd better assume we're using a set of unique question logic and try to use that.
-        print('logic type question')# Self contained generating its own question and items.
-        template_question, items = module.questions[key]()
-
-    shuffle(items) # We don't want the order of the items to be predictable.
-    # Put question list and items in dictionary.
+    template_question, items = generate_template_question_and_items(module, key) # see above
     
+    # Put question list and items in context dictionary.
     context={}
     context['question'], context['items'] = template_question, items
-    # Question type may tell the template how to handle the question if needed.
-    context['question_type'] = question_type
-    # Question key, acting as a question description
-    context['question_description'] = key
-    
-    context['cert_name'] = re.sub('[0-9]+', '', module_str)
-    context['question_description_link'] = 'https://duckduckgo.com/?q=' + key.replace('_', '+')
-    # question module name
+    context['question_type'] = question_type # Question type may tell the template how to handle the question if needed.
+    context['question_description'] = key # Question key, acting as a question description
+    context['cert_name'] = re.sub('[0-9]+', '', module_str)# needed in case we switch to specific question
     context['module_name'] = module_object_to_name_dict[module]
-    context['title'] = 'AWS ' + re.sub('_', ' ', module_object_to_name_dict[module]).capitalize()  
-    key_link = key.replace(',', '')
-    # what is this?
-    context['key_link'] = key_link.replace(' ', '+').lower()
-    
+    context['title'] = 'AWS ' + re.sub('_', ' ', module_object_to_name_dict[module]).capitalize()
+    context['question_description_link'] = 'https://duckduckgo.com/?q=aws+' + key.replace('_', '+') # used to link if needed
     # We set this timer at the top so let's stop it now and see how long all that took!
-    stop = time.time()
-    print('time taken:', stop-start)#interesting to know...
-    
+    print('time taken:', time.time()-start)#interesting to know...
     return render(request, 'aws/multichoice_module_cookies.html', context)
 
 
 def test_question(request):
-    print(request.COOKIES['drill']  )
     module_str = 'cp10'
     module = module_str_to_object_dict[module_str]
-
     key = 'AWS_Well-Architectured_Framework_concepts'
     question_logic = 'new_pairs'
-
-    resource = module.questions[key]
-    pkgpath = os.path.dirname(ql.__file__)
-    question_logic_files = [name for _, name, _ in pkgutil.iter_modules([pkgpath + RESOURCE_INPUT_QUESTIONS_PATH])]
-    print('question_logic_files', question_logic_files)
     question_type = 'multi-choice'
-    if type(resource['type'])==str:
-        resource_type=resource['type']
-    else:
-        # Else, resource type is a list/tuple and needs to be selected.
-        resource_type=choice(resource['type'])
-    print('resource_type:',resource_type)
-
-    question_logic_dict = {}
-
-    for file_name in question_logic_files:
-        if file_name not in ['all']:
-            exec(f"question_logic_dict['{file_name}']={file_name}.logic")
-
-    print(question_logic_dict)
-
-    #template_question, items = question_logic_dict[resource_type](resource)
-    #template_question, items = question_logic_dict['posneg_pairs'](resource)
-    template_question, items = question_logic_dict[question_logic](resource)
-
+    resource = module.questions[key]
+    
+    template_question, items = generate_template_question_and_items(module, key) # see above
+    
     print('template_question', template_question)
     print('items', items)
 
     context = {}
     context['cert_name'] = re.sub('[0-9]+', '',module_str)
-    context['question_description_link'] = 'https://duckduckgo.com/?q=' + key.replace('_', '+')
+    context['question_description_link'] = 'https://duckduckgo.com/?q=aws+' + key.replace('_', '+')
     context['question'], context['items'] = template_question, items
     # Question type may tell the template how to handle the question if needed.
     context['question_type'] = question_type

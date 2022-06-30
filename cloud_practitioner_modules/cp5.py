@@ -96,6 +96,111 @@ questions = {
             'S3 is not ideal making lots of reads and writes to what is stored',
         )
     },
+    'S3_vs_EBS_use_cases_and_description':{
+        'question_with_0':'Which isPOSNEG a PLACEHOLDER use case?',
+        'positive_negative':('',' not'),
+        'type':['multi_option_pairs','posneg_pairs'],
+        'pairs':(
+            (['S3','Simple Storage Service'],
+            [
+                'creating data lakes',
+                'holding raw data in native format',
+                'big data analytics',
+                'use with machine learning tools',
+                'robust backup solution',
+                'backup and restoration',
+                'reliable disaster recovery',
+                'content management',
+                'serving media',
+            ]),
+            (['EBS','Elastic Block Storage'],
+            [
+                'software testing',
+                'software development',
+                'business continuity',
+                'running applications in multiple regions',
+                'running enterprise-wide applications',
+                'applications requiring low level latency',
+                'transactional databases',
+                'No SQL databases',
+            ]),
+        )
+    },
+    
+    'S3_vs_EBS_security_integrity_availability':{
+        'question_with_0':'Which POSNEG AWS PLACEHOLDER?',
+        'positive_negative':('describes','does not describe'),
+        'type':['multi_option_pairs','posneg_pairs'],
+        'pairs':(
+            (['S3','Simple Storage Service'],
+            [
+                'distributes data objects across several machines',
+                'accessed using APIs',
+                'accessed via the internet',
+                'stores data accrosss multiple Availability Zones',
+                'prevents unauthorised access using access management tools and encryption policies',
+                'features which make it easier to comply with regulatory requirements',
+                'uses versioning and cross-regional replication for backup',
+                'can be used by multiple instances at the same time'
+            ]),
+            (['EBS','Elastic Block Storage'],
+            [
+                'stores files in multiple volumes',
+                'each volume acts as a seperate hard drive',
+                'accessible only by the attached instance',
+                'accessed by a single attached instance',
+                'provides durability by redundantly storing data in a single AZ',
+                'unauthorised access to an instance is a vulnerability',
+                'snapshots used to place resources and data in multiple locations',
+                'uses automated backup',
+                'better for geographic interchangability',
+                'can only be used by one mounted instance',
+                'cannot be used by multiple instances at a single time',
+            ]),
+        )
+    },
+    'S3_vs_EBS_storage_pricing_and_performance':{
+        'question_with_0':'Which POSNEG AWS PLACEHOLDER?',
+        'positive_negative':('describes','does not describe'),
+        'type':['multi_option_pairs','posneg_pairs'],
+        'pairs':(
+            (['S3','Simple Storage Service'],
+            [
+                'object level data storage',
+                'distributes data objects across several machines',
+                'can store larger amounts of data',
+                'stores data in buckets',
+                'each bucket has untimited data capacity',
+                'has no effective limit on storage capacity',
+                'rapidly scalable',
+                'resources can be provisioned in run time',
+                'Free Tier - 5 GB',
+                'First 50 TB/month - $0.023/GB',
+                '450 TB/month - $0.022/GB',
+                'slower storage',
+                'more latency',
+            ]),
+            (['EBS','Elastic Block Storage'],
+            [
+                'block level data storage',
+                'stores files in multiple volumes',
+                'each volume acts as a seperate hard drive',
+                'can store less data',
+                'stored data in volumnes',
+                'limit of 20 volumes',
+                'each volume can hold up to 1TB',
+                'has an upper limit on storage capacity'
+                'storage resources must be manually increased',
+                'faster storage',
+                'less latency',
+                'Free Tier - 30 GB'
+                'General Purpose - $0.045/GB(1 month)',
+                'Provisioned SSD - $0.125/GB(1 month)',
+                'uses SSD volumes',
+            ]),
+        )
+    },
+
     'Elastic_file_store_RDS_and_Aurora': {
         'question_with_0':'Which best describes PLACEHOLDER?',
         'question_with_1':'PLACEHOLDER best describes:',
@@ -110,6 +215,8 @@ questions = {
         'fillers': ()
     },
 }
+
+
 
 """
 
