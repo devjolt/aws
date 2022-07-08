@@ -1,4 +1,4 @@
-from random import randint
+from random import randint, choice
 
 """multi_option_from_correct_incorrect
 make_items_question_from_correct_incorrect
@@ -28,7 +28,8 @@ questions = {
             ('AWS Market Place',['a digital catalog that includes thousands of software listings from independent software vendors','find, test, and buy software that runs on AWS']),
             ('consolidated billing',['share bulk discount pricing, Savings Plans, and Reserved Instances across the accounts in your organization','enables you to receive a single bill for all AWS accounts in your organization','easily track the combined costs of all the linked accounts in your organization','maximum number of accounts allowed for an organization is 4, but you can contact AWS Support to increase your quota, if needed']),
             ('AWS Personal Health Dashboard','provides alerts and remediation guidance when AWS is experiencing events that may affect you'),
-            ('AWS Organizations','enables you to manage multiple AWS accounts from a central location')
+            ('AWS Organizations','enables you to manage multiple AWS accounts from a central location'),
+            ('AWS QuickSight',[f"understand data by {choice(['asking questions in natural language','exploring through interactive dashboards','automatically looking for patterns and outliers powered by machine learning'])}","Connect to all your data in AWS, 3rd party clouds, or on-premises","SPICE in-memory storage to scale data exploration to thousands of users","Forecast business metrics and perform interactive what-if analysis with point-and-click","Pay-per-session optimizes costs by only paying for actual usage","Q enables end-users to dive deep into data through simple questions without BI training"])
         ),
         'fillers': ()
     },

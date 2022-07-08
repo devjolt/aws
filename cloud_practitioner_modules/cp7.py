@@ -25,6 +25,7 @@ questions = {
             ('CloudTrail Insights',['an optional CloudTrail feature','allows automatic detection of unusual API activities in your AWS account']),
             ('AWS Trusted Advisor',['inspects your AWS environment and provides real-time recommendations in accordance with AWS best practices','compares its findings to AWS best practices in five categories','offers a list of recommended actions and additional resources to learn more about AWS best practices']),
             ('AWS Trusted Advisor dashboard','review completed checks for cost optimization, performance, security, fault tolerance, and service limits'),
+            ('AWS QuickSight',[f"understand data by {choice(['asking questions in natural language','exploring through interactive dashboards','automatically looking for patterns and outliers powered by machine learning'])}","Connect to all your data in AWS, 3rd party clouds, or on-premises","SPICE in-memory storage to scale data exploration to thousands of users","Forecast business metrics and perform interactive what-if analysis with point-and-click","Pay-per-session optimizes costs by only paying for actual usage","Q enables end-users to dive deep into data through simple questions without BI training"])
         ),
         'fillers': ()
     },

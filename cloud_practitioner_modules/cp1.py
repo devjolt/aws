@@ -7,6 +7,7 @@ multi_option_pairs
 order_from_pairs
 code_block_question
 """
+from random import choice
 
 questions = {
     'AWS_services_and_tools': {
@@ -27,6 +28,7 @@ questions = {
             ('Amazon Neptune',['a graph database service','build and run applications that work with highly connected datasets, such as recommendation engines, fraud detection, and knowledge graphs']),
             ('Amazon CloudFront',['content delivery service']),
             ('AWS DeepRacer',['an autonomous 1/18 scale race car that you can use to test reinforcement learning models']),
+            ('AWS QuickSight',[f"understand data by {choice(['asking questions in natural language','exploring through interactive dashboards','automatically looking for patterns and outliers powered by machine learning'])}","Connect to all your data in AWS, 3rd party clouds, or on-premises","SPICE in-memory storage to scale data exploration to thousands of users","Forecast business metrics and perform interactive what-if analysis with point-and-click","Pay-per-session optimizes costs by only paying for actual usage","Q enables end-users to dive deep into data through simple questions without BI training"])
         ),
         'fillers': ()
     },

@@ -148,6 +148,7 @@ questions = {
             ('Amazon SageMaker',['uses machine learning','removing the difficult work from the process and empower you to build, train, and deploy ML models quickly','analyze data','solve complex problems','predict outcomes before they happen']),
             ('Amazon Textract','a machine learning service that automatically extracts text and data from scanned documents'),
             ('AWS DeepRacer','an autonomous 1/18 scale race car that you can use to test reinforcement learning models'),
+            ('AWS QuickSight',[f"understand data by {choice(['asking questions in natural language','exploring through interactive dashboards','automatically looking for patterns and outliers powered by machine learning'])}","Connect to all your data in AWS, 3rd party clouds, or on-premises","SPICE in-memory storage to scale data exploration to thousands of users","Forecast business metrics and perform interactive what-if analysis with point-and-click","Pay-per-session optimizes costs by only paying for actual usage","Q enables end-users to dive deep into data through simple questions without BI training"])
         
         ),
         'fillers': ()

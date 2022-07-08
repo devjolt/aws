@@ -43,6 +43,7 @@ questions = {
             ('Instance stores',['ideal for temporary data that does not need to be kept long term','When an Amazon EC2 instance is stopped or terminated, all the data that has been written to the attached instance store is deleted']),
             
             ('Amazon S3 bucket','cannot be attached to Amazon EC2 instances'),
+            ('Amazon S3 Transfer Acceleration', ['enables fast, easy, and secure transfers of files over long distances between your client and a bucket','takes advantage of Amazon CloudFront\'s globally distributed edge locations',' As the data arrives at an edge location, data is routed to its destination over an optimized network path','only possible with an enabled bucket', 'may take up to 20 minutes after enabling before speed increases', 'not supported for all regions','The name of the bucket used must be DNS-compliant and must not contain periods','only supported on virtual-hosted style requests']),
         ),
         'fillers': ()
     },
@@ -59,6 +60,7 @@ questions = {
             ('Amazon EC2', 'allows users to rent virtual computers on which to run their own computer applications'),
             ('Amazon EC2 instance', 'a virtual server for running applications'),
             ('Amazon S3 bucket','cannot be attached to Amazon EC2 instances'),
+            ('Amazon S3 Transfer Acceleration', ['enables fast, easy, and secure transfers of files over long distances between your client and a bucket','takes advantage of Amazon CloudFront\'s globally distributed edge locations',' As the data arrives at an edge location, data is routed to its destination over an optimized network path','only possible with an enabled bucket', 'may take up to 20 minutes after enabling before speed increases', 'not supported for all regions','The name of the bucket used must be DNS-compliant and must not contain periods','only supported on virtual-hosted style requests']),
         ),
         'fillers': ()
     },
@@ -75,10 +77,36 @@ questions = {
             ('S3 Intelligent-Tiering',['Ideal for data with unknown or changing access patterns','Requires a small monthly monitoring and automation fee per object','Amazon S3 automatically moves it to the infrequent access tier if not accessed for 30 days','If you access an object in the infrequent access tier, Amazon S3 automatically moves it to the frequent access tier, S3 Standard','allow Amazon S3 to monitor object access patterns']),
             ('S3 Glacier',['low-cost storage class that is ideal for data archiving','retrieve objects stored in the S3 Glacier storage class within a few minutes to a few hours','ideal for data archiving','use this storage class to store archived customer records or older photos and video files']),
             ('S3 Glacier Deep Archive',['Lowest-cost object storage class ideal for archiving','Able to retrieve objects within 12 hours','ideal for data archiving']),
-            
-            
+            ('S3 Transfer Acceleration', ['enables fast, easy, and secure transfers of files over long distances between your client and a bucket','takes advantage of Amazon CloudFront\'s globally distributed edge locations',' As the data arrives at an edge location, data is routed to its destination over an optimized network path','only possible with an enabled bucket', 'may take up to 20 minutes after enabling before speed increases', 'not supported for all regions','The name of the bucket used must be DNS-compliant and must not contain periods','only supported on virtual-hosted style requests']),
         ),
         'fillers': ()
+    },
+    'S3_Transfer_Acceleration':{
+        'type':'auto_correct_incorrect',
+        'verbs':('will','are','can','does','is','must'),
+        'negator':'not',
+        'correct':(
+            'can enable fast, easy, and secure transfers of files over long distances between your client and a bucket',
+            'can not enable fast, easy, and secure transfers of files over long distances between your client and an EC2 instance',
+            'Amazon CloudFront\'s globally distributed edge locations are used in the transfer',
+            'under utilised S3 buckets are not used in the transfer',
+            'data will be routed to its destination over an optimized network path when it arrives at an edge location',
+            f"data will not be routed to its destination over a {choice(['VPN','virtual private cloud','private subnet'])} when it arrives at an edge location",
+            'an enabled bucket is required',
+            'an enabled EC2 instance is not required',
+            'an enabled EBS volume is not required',
+            'speed increases after activation are not instantaneous',
+            'speed increases after activation may take time',
+            'S3 Transfer Acceleration is not supported for all regions',
+            'buckets used must be DNS-compliant',
+            'buckets used may not contain periods',
+            'virtual-hosted style requests are required to support transfer requests',
+            'VPN connections are not required to support transfer requests',
+            'S3 Intelligent Tiering is not required to support transfer requests',
+            'an AWS Artefact Agreements is not required to support transfer requests',
+            'a Security group is not required to support transfer requests',
+            'AWS CloudTrail is not required to support transfer requests',
+        )
     },
     'EBS_vs_S3':{
         'type':'auto_correct_incorrect',
