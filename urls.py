@@ -19,6 +19,8 @@ cloud_practitioner_patterns = [
     path('cp9/', RandomModuleView.as_view(modules = (cp9,)), name = 'migration_and_innovation'),
     path('cp10/', RandomModuleView.as_view(modules = (cp10,)), name = 'cloud_journey'),
     path('<str:module_str>/<str:key>/', SpecificAreaView, name='specific_area_view'),
+    path('log_problem/', log_problem, name='log_problem'),
+
 ]
 
 urlpatterns = [

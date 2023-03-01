@@ -1,4 +1,5 @@
 import inspect
+import logging
 import os
 from pathlib import Path
 import pkgutil
@@ -7,6 +8,7 @@ from random import randint, shuffle, choice
 import re
 import time
 
+from django.http import HttpResponseRedirect
 from django.views.generic.base import TemplateView
 from django.shortcuts import render
 
@@ -14,6 +16,9 @@ from .cloud_practitioner_modules import cp1, cp2, cp3, cp4, cp5, cp6, cp7, cp8, 
 from .utilities import utilities as utl
 import question_logic as ql
 from question_logic.all import *
+
+logging.basicConfig(filename='cismp_question_logger.log', encoding='utf-8', level=logging.ERROR)
+logging.disable(logging.INFO)
 
 def populate_question_logic_dict()->dict:
     # make the path appropriately depending on OS
@@ -164,11 +169,14 @@ class RandomModuleView(TemplateView):
         template_question, items = generate_template_question_and_items(module, key) # see above
 
         # Put question list and items in context dictionary.
+        context['url'] = self.request.path
         context['question'], context['items'] = template_question, items
         context['question_type'] = question_type # Question type may tell the template how to handle the question if needed.
         context['question_description'] = key # Question key, acting as a question description
         context['cert_name'] = re.sub('[0-9]+', '', module_str)# needed in case we switch to specific question
         context['module_name'] = module_object_to_name_dict[module]# question module name needed as above
+        context['module'] = module_object_to_name_dict[module]
+        context['key'] = key
         context['title'] = 'AWS Cloud Practitioner Practice'# may change later...
         context['question_description_link'] = 'https://duckduckgo.com/?q=aws+' + key.replace('_', '+') # used to link if needed
         # We set this timer at the top so let's stop it now and see how long all that took!
@@ -184,11 +192,14 @@ def SpecificAreaView(request, module_str, key):
     
     # Put question list and items in context dictionary.
     context={}
+    context['url'] = request.path
     context['question'], context['items'] = template_question, items
     context['question_type'] = question_type # Question type may tell the template how to handle the question if needed.
     context['question_description'] = key # Question key, acting as a question description
     context['cert_name'] = re.sub('[0-9]+', '', module_str)# needed in case we switch to specific question
     context['module_name'] = module_object_to_name_dict[module]
+    context['module'] = module_object_to_name_dict[module]
+    context['key'] = key
     context['title'] = 'AWS ' + re.sub('_', ' ', module_object_to_name_dict[module]).capitalize()
     context['question_description_link'] = 'https://duckduckgo.com/?q=aws+' + key.replace('_', '+') # used to link if needed
     # We set this timer at the top so let's stop it now and see how long all that took!
@@ -226,3 +237,17 @@ def test_question(request):
     
 
 
+def log_problem(request):
+    # post question details through
+    # problem should include module, question key, question text and answer text
+    # should get saved to a log
+    other = request.POST.get('other')
+    problem = request.POST.get('problem') if other == "" else other
+    from_url = request.POST.get('url')
+    module = request.POST.get('module')
+    key = request.POST.get('key')
+    question_type = request.POST.get('question_type')
+    question = request.POST.get('question')
+    items = request.POST.get('items')
+    logging.error(f"AWS CP {problem} {module}, {key} ({question_type}): {question} - {items}")
+    return HttpResponseRedirect(from_url)

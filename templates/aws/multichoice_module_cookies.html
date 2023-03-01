@@ -160,6 +160,29 @@ otherwise, we've got a lovely reset button right there!
             <div class='text'><a href = "{{question_description_link}}" target = '_blank'>Little help? (opens duckduckgo)</a></div>
             
         </div>
+        <br><br>
+        <details>
+            <summary>Report a problem with this question</summary>
+            <br>
+            <form action="/aws/cp/log_problem/" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="url" value={{url}}>
+                <input type="hidden" name="module" value="{{module}}">
+                <input type="hidden" name="key" value="{{key}}">
+                <input type="hidden" name="question_type" value="{{question_type}}">
+                <input type="hidden" name="question" value="{{question}}">
+                <input type="hidden" name="items" value="{{items}}">
+                <input type="radio" id="incorrect" name="problem" value="incorrect">
+                <label for="incorrect">This question is wrong (double check first!)</label><br>
+                <input type="radio" id="placeholder" name="problem" value="placeholder">
+                <!--<label for="placeholder">PLACEHOLDER (or similar) appears in text</label><br>
+                <input type="radio" id="weird" name="problem" value="weird text">-->
+                <label for="weird">It just reads a bit weirdly (e.g. "PLACEHOLDER")</label><br>
+                <label for="other">Other:</label>
+                <input type="text" id="other" name="other"><br>
+                <input type="submit">(generates another question)</submit>
+            </form>
+        </details>
     </div>
     <div class = 'qright'>
         {% if question_type == 'multi-choice' %}
